@@ -1,0 +1,442 @@
+\documentclass[12pt]{article}
+\usepackage{xspace}
+\usepackage{gastex}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{wrapfig}
+\pagestyle{empty}
+\textwidth      165mm
+\textheight     252mm
+\topmargin      -18mm
+\oddsidemargin  -2mm
+\evensidemargin -2mm
+% \renewcommand{\baselinestretch}{0.96}
+\renewcommand{\theenumi}{\alph{enumi}}
+\newcommand{\impl}{\mathbin{\Rightarrow}}
+\newcommand{\biim}{\mathbin{\Leftrightarrow}}
+\newcommand{\id}[1]{\mbox{\textit{#1}}}
+\newcommand{\tuple}[1]{\langle #1 \rangle}
+\newcommand{\ma}{\mathsf{a}}
+\newcommand{\mb}{\mathsf{b}}
+\newcommand{\mc}{\mathsf{c}}
+\newcommand{\md}{\mathsf{d}}
+\newcommand{\nat}{\mathbb{N}}
+\newcommand{\intg}{\mathbb{Z}}
+
+\newcommand{\set}[1]{\left\{
+    \begin{array}{l}#1
+    \end{array}
+  \right\}}
+
+\newcommand{\sset}[2]{\left\{~#1 \left|
+      \begin{array}{l}#2\end{array}
+    \right.     \right\}}
+
+\begin{document}
+
+\begin{center}
+{\sc The University of Melbourne
+\\
+School of Computing and Information Systems
+\\ 
+COMP30026 Models of Computation}
+\bigskip \\
+{\Large\bf Assignment 2, 2019}
+\bigskip \\
+{\large Released: 27 September.  Deadline: 21 October at 23:00}
+\end{center}
+
+\section*{Purpose}
+To improve and consolidate your understanding of functions,
+relations, regular languages, context-free languages, 
+finite-state automata and push-down automata.
+To develop skills in analysis and formal reasoning about
+complex concepts, including proof by induction.
+To practise putting rigorous arguments in writing.
+
+\subsection*{Challenge 1}
+
+Give context-free grammars for these languages:
+\begin{enumerate}
+\item
+The set $A$ of odd-length strings in $\{\ma,\mb\}^*$ whose first, 
+middle and last symbols are all the same.
+For example, $\mb$ and $\ma \mb \ma \mb \ma$ are in $A$,
+but $\epsilon$, $\ma \ma \ma \ma$, and $\ma \mb \mb \mb \mb$ are not.
+\item
+The set $B = \{\ma^i \mb \ma^j \mid i \not= j\}$.
+For example, $\ma \mb$ and $\ma \mb \ma \ma \ma$ are in $B$,
+but $\epsilon$, $\ma$, $\mb$, and $\ma \ma \mb \ma \ma$ are not.
+\end{enumerate}
+
+\subsection*{Challenge 2}
+
+Consider the language
+\[
+  C = \set{w \in \{\texttt{a},\texttt{b}\}^* \mid
+        \mbox{$w$ contains at least as many \texttt{a}s as \texttt{b}s}}
+\]
+For example, $\epsilon$, \verb!aaa!, \verb!aba!, and \verb!bbaababaa! 
+are all in $C$,
+but \verb!bbb! and \verb!bbaaabb! are not.
+\begin{enumerate}
+\item
+Construct a 3-state push-down automaton to recognise $C$.
+Provide the solution as a transition diagram.
+Partial marks are given for a $C$ recogniser with more than 3 states.
+\item
+Prove formally that the following context-free grammar $G$ generates $C$:
+\[
+\begin{array}{lrl}
+   S & \rightarrow
+     & \epsilon 
+\\   & \mid
+     & \texttt{a} 
+\\   & \mid
+     & \texttt{a}\ S\ \texttt{b} 
+\\   & \mid
+     & \texttt{b}\ S\ \texttt{a} 
+\\   & \mid
+     & S\ S
+\end{array}
+\]
+Hint: Proceed in two steps;
+prove that every string in $L(G)$ is in $C$
+(by structural induction) 
+and prove that every string in $C$ is in $L(G)$
+(by induction on the length of the string).
+\end{enumerate}
+{\bf Note:} For this challenge we have designed the marking scheme 
+so that you can get away with solving just \textbf{one} of 
+2(a) and 2(b) if you want.
+Each of 2(a) and 2(b) is marked to a maximum of 2, 
+and if you submit both, your mark for Challenge~2 will be 
+the maximum of your marks for the two sub-challenges.
+
+\pagebreak
+\subsection*{Challenge 3}
+
+Consider the two language-transformer functions $\id{triple}$ and 
+$\id{snip}$ defined as follows:
+\[
+\begin{array}{lcl}
+   \id{triple}(L) &=& \{w w w \mid w \in L\}
+\\ \id{snip}(L) &=& \{ xz \mid x y z \in L \mbox{ and } |x| = |y| = |z|\}
+\end{array}
+\]
+Note that $\id{snip}(L)$ discards a string $w$ from $L$ unless $w$
+has length $3k$ for some $k \in \mathbb{N}$ (possibly 0), and then
+the strings whose lengths are multiples of 3 have their middle
+thirds removed.
+For example, if 
+$L= \{\ma\mb,\mb\ma\mb,\mb\mb\mb,\mb\ma\mb\mb\ma,\ma\ma\mb\mb\ma\ma\}$
+then $\id{snip}(L) = \{\mb\mb,\ma\ma\ma\ma\}$.
+\begin{enumerate}
+\item
+Let $R$ be a regular language.
+Is $R^3 = R \circ R \circ R$ necessarily regular? 
+Justify your answer.
+\item
+Let $R$ be a regular language.
+Is $\id{triple}(R)$ necessarily regular?  
+Justify your answer.
+\item
+Let $R$ be a regular language.
+Show that $\id{snip}(R)$ is not necessarily regular.
+\end{enumerate}
+
+\subsection*{Challenge 4}
+
+This challenge is to be answered on Grok.
+See the last page for submission instructions.
+
+Let ${}\leq{}$ be a partial order on the set $S$.
+We say that a function $h : S \rightarrow S$ is:
+\begin{itemize}
+\addtolength{\itemsep}{-6pt}
+\item
+\emph{idempotent} ({\bf \verb!Idem!})
+iff $\forall x \in S\ (h(h(x)) = h(x))$
+\item
+\emph{isotone} ({\bf \verb!Iso!})
+iff $\forall x,y \in S\ (x \leq y \impl h(x) \leq h(y))$
+% In other words, an isotone function is one that preserves order.
+\item
+\emph{a closure operator} iff it is idempotent and isotone
+\item
+\emph{increasing} ({\bf \verb!Inc!})
+iff $\forall x \in S\ (x \leq h(x))$
+% \item
+% \emph{decreasing} ({\bf \verb!Dec!})
+% iff $\forall x \in S\ (h(x) \leq x)$
+\item
+\emph{an upper closure operator} ({\bf \verb!UCO!})
+iff it is a closure operator and increasing
+% \item
+% \emph{a lower closure operator} ({\bf \verb!LCO!})
+% iff it is a closure operator and decreasing
+\end{itemize}
+Closure operators are important and appear in many different contexts.
+We have met several; for example, when we take the transitive closure
+of a relation, we are really applying an upper closure operator to the 
+relation.
+Here is an example of a upper closure operator on 
+$({\cal P}(\intg),\subseteq)$, that is, the set of integer sets
+(ordered by the subset ordering):
+\begin{minipage}{0.69\textwidth}
+\setlength{\parindent}{3ex}
+\[
+    \id{addEvens}(S) = S \cup \{n \in \intg \mid \mbox{$n$ is even}\}
+\]
+Namely, 
+(1) it is idempotent: $\id{addEvens}$ always produces a 
+set which includes all even integers, and when applied 
+to such a set, $\id{addEvens}$ is just the identity function;
+(2) it is isotone: if $S \subseteq S'$ 
+then $\id{addEvens}(S) \subseteq \id{addEvens}(S')$; and
+(3) it is increasing: $\id{addEvens}(S)$ is always a superset of $S$.
+
+Consider $T = \{\ma,\mb,\mc,\md\}$ and the relation $\leq$ on $T$, 
+defined by $x \leq y$ iff $x = \ma \lor x = y \lor y = \md$.
+The Hasse diagram for $T$ is shown on the right.
+There are 256 functions in $T \rightarrow T$.
+The table below the Hasse diagram lists 10 of these functions.
+For example, $f_3$ is the mapping
+$\{\ma \mapsto \mb, \mb \mapsto \md, \mc \mapsto \ma, \md \mapsto \mc\}$.
+
+On Grok, define 10 lists \verb!f0! \ldots\ \verb!f9!, 
+such that the list \verb!f!$i$ gives those properties 
+(a selection of \verb!Idem!, \verb!Iso!, \verb!Inc!, and \verb!UCO!)
+that $f_i$ possesses (and only those properties).
+Grok defines a suitable Haskell type for this.
+For example, for the function $g: T \rightarrow T$ defined by 
+$g(t) = \mc$, the list of properties would be \verb!g = [Idem,Iso]!.
+\end{minipage}
+%
+\begin{minipage}{0.29\textwidth}
+\begin{center}
+  \unitlength=4pt
+  \begin{picture}(6,15)(-6,0)
+  \gasset{Nw=5,Nh=5,curvedepth=0}
+  \thinlines
+  \node[Nframe=n](A)(0,0){$\ma$}
+  \node[Nframe=n](B)(-6,6){$\mb$}
+  \node[Nframe=n](C)(6,6){$\mc$}
+  \node[Nframe=n](D)(0,12){$\md$}
+  \drawedge[AHnb=0](A,B){~}
+  \drawedge[AHnb=0](A,C){~}
+  \drawedge[AHnb=0](B,D){~}
+  \drawedge[AHnb=0](C,D){~}
+  \end{picture}
+\end{center}
+\vspace{1ex}
+\[
+\quad
+\begin{array}{|c|cccc|}
+   \hline
+        & \ma & \mb & \mc & \md
+\\ \hline
+   f_0     & \ma     & \ma     & \ma     & \ma
+\\ f_1     & \ma     & \ma     & \ma     & \mb
+\\ f_2     & \ma     & \mb     & \mc     & \md
+\\ f_3     & \mb     & \md     & \ma     & \mc
+\\ f_4     & \mb     & \md     & \md     & \md
+\\ f_5     & \mc     & \mc     & \mc     & \md
+\\ f_6     & \mc     & \md     & \mc     & \md
+\\ f_7     & \md     & \mb     & \mb     & \md
+\\ f_8     & \md     & \mb     & \mc     & \ma
+\\ f_9     & \md     & \mb     & \mc     & \md
+\\ \hline
+\end{array}
+\]
+\end{minipage}
+
+\pagebreak
+\subsection*{Challenge 5}
+
+\begin{wrapfigure}[8]{r}{.4\textwidth}
+\begin{center}
+  \unitlength=4pt
+  \begin{picture}(85,20)(42,-4)
+  \gasset{Nw=6,Nh=6,curvedepth=0}
+  \thinlines
+  \node[Nmarks=i](N1)(50,16){$q_1$}
+  \node(N2)(65,16){$q_2$}
+  \node(N3)(85,16){$q_3$}
+  \node[Nmarks=r](N4)(65,0){$q_4$}
+  \node[Nmarks=r](N5)(85,0){$q_5$}
+
+  \drawedge[ELside=l](N1,N2){\texttt{0},\texttt{1}}
+  \drawedge[ELside=l](N3,N5){\texttt{1}}
+  \drawedge[ELside=l](N4,N2){\texttt{1}}
+  \gasset{curvedepth=2}
+  \drawedge[ELside=l](N2,N3){$\epsilon,\mathtt{0}$}
+  \drawedge[ELside=l](N3,N2){\texttt{1}}
+  \drawedge[ELside=l](N4,N5){\texttt{1}}
+  \drawedge[ELside=l](N5,N4){\texttt{0}}
+
+  \end{picture}
+\end{center}
+\end{wrapfigure}
+This challenge is to design a regular expression and three DFAs,
+and submit them via Grok.
+See the last page for submission instructions.
+
+\begin{enumerate}
+\item
+An NFA $N$ is shown on the right.
+Give a regular expression for $L(N)$, the language recognised by $N$.
+The expression should use only the regular operations, that is, union,
+concatenation, and Kleene star 
+(apart from $\epsilon$, \texttt{0}, and \texttt{1}).
+\end{enumerate}
+Now let the alphabet 
+$\Sigma = \{\mathtt{1},\mathtt{2},\mathtt{3}\}$.
+Design DFAs to recognise these three regular languages:
+\begin{enumerate}
+\setcounter{enumi}{1}
+\item
+The set $P$ of reverse-sorted strings.
+By ``reverse-sorted'' we mean: No \verb!1! comes before any \verb!2! 
+or \verb!3!, and no \verb!2! comes before any \verb!3!.
+For example, $\epsilon$, \verb!2!, and \verb!33111! are reverse-sorted, 
+but \verb!321211! is not.
+\item
+The set $Q$ of strings, the sum of whose elements is divisible by 4.
+That is, % build a DFA for
+\[
+  Q = \sset{a_1 a_2 \cdots a_n}%
+{n \geq 0, \sum_{i=1}^{n}a_i = 4k, \mbox{for some $k \in \nat$}}
+\]
+For example, $\epsilon$, \verb!31!, \verb!3333!, and \verb!11111112111! are
+all in $Q$ (because each string of digits adds up to some multiple of 4),
+but \verb!2!, \verb!311!, \verb!333!, and \verb!1111111211! are not in $Q$.
+\item
+The set $R = P \setminus Q$, of strings that are in $P$ but not in $Q$.
+\end{enumerate}
+
+\subsection*{Challenge 6}
+
+This challenge is to design a Haskell function that generates 
+certain DFAs.
+It should be solved on Grok.
+
+In Lecture 14 we went through the exercise of constructing a DFA
+that could recognise a certain subset of $\{\texttt{0},\texttt{1}\}^*$, 
+namely the set of binary strings that represent natural numbers that 
+are multiples of 5 (call that language $M_5$).
+For example, $\epsilon$, \verb!000!, \verb!101!, \verb!00101101!, 
+and \verb!1100100! were all elements of $M_5$ and accepted by the DFA, 
+whereas \verb!11!, \verb!0110!, \verb!101110!, and \verb!1100111! 
+were not members, and were all rejected.
+We now want to generalise that idea.
+
+Write a Haskell function \verb!multiples :: Int -> DFA! so that
+`\verb!multiples! $n$' ($n>0$) produces a DFA 
+(with alphabet $\{\texttt{0},\texttt{1}\}$) 
+that recognises the language $M_n$ of binary strings 
+representing natural numbers that are multiples of $n$.
+
+We will use the following marking scheme for Challenge~6:
+\begin{itemize}
+\addtolength{\itemsep}{-6pt}
+\item
++0.5 marks if the function works (produces a correct DFA) 
+for $1 \leq n \leq 6$.
+\item
++0.5 marks if the function produces minimal DFAs for the cases
+$1 \leq n \leq 6$.
+\item
++0.5 marks if the function works for any $n$.
+\item
++0.5 marks if the function always produces a minimal DFA,
+for any $n$.
+\end{itemize}
+We suggest you work in stages:
+\begin{enumerate}
+\addtolength{\itemsep}{-6pt}
+\item[1.]
+First think through and hand-code the solutions for $1 \leq n \leq 6$.
+\item[2.]
+Then think about minimising these 6 DFAs, by hand 
+(no need to program anything, so far).
+\item[3.]
+The first stage should help you discover the general pattern 
+of the problem, leading to a general solution for all $n$.
+\item[4.]
+The second stage might help you find the general pattern 
+for minimal DFAs, leading to an enhanced general solution.
+\end{enumerate}
+
+\section*{Submission and assessment}
+All challenges should be solved and submitted by students individually.
+Your solution will count for 12 marks out of 100 for the subject.
+Each challenge is worth 2~marks.
+Marks are primarily allocated for correctness, but elegance and how
+clearly you communicate your thinking will also be taken into account.
+
+Some of the challenges are harder than others, and that is a 
+deliberate design.
+For example, you may find 3c harder than 3a and 3b, and the last
+0.5 marks for Challenge~6 may require more work than the rest of
+that challenge.
+
+The deadline is 21 October at 23:00.
+Late submission will be possible, but a late submission penalty will
+apply: a flagfall of 1 mark, and then 1 mark per 12 hours late.
+
+\emph{For challenges 1--3}, submit a PDF document via the LMS.
+This document should be no more than 2 MB in size.
+If you produce an MS Word document, it must be exported
+and submitted as PDF, and satisfy the space limit of 2 MB.
+We also accept \emph{neat} hand-written submissions, but these must be
+scanned and provided as PDF, and again, they must respect the size limit.
+If you scan your document, make sure you set the resolution so that
+the generated document is no more than 2 MB.
+The assignment submission site on the LMS explains what you can do
+if you find it hard to satisfy this space requirement.
+
+\emph{For challenges 4--6, submit on Grok.}
+The required format for submitted solutions will be clear when you
+open the Grok modules, but briefly,
+for Challenge~4 you define ten Haskell lists of type 
+\verb![FunctionProperty]!,
+where the inhabitants of \verb!FunctionProperty! are 
+\verb!Idem!, \verb!Iso!, \verb!Inc!, and \verb!UCO!.
+For Challenge~5 you use the
+Haskell representations for DFAs and regular expressions 
+introduced in Worksheets~3 and 4, and for Challenge~6, 
+you will need to write some Haskell code.
+To submit, you need to click ``mark''.
+The feedback you will receive at submission time is limited to 
+well-formedness checking; the correctness of your solutions is
+something you will need to test and be confident about.
+You can submit as many times as you like.
+What gets marked is the last submission you made before the deadline.
+
+Once again, for those who want to use the assignment to
+get some \LaTeX\ practice, the source of this document will be 
+available in the LMS,
+in the content area where you find the PDF version.
+
+Make sure that you have enough time towards the end of the assignment
+to present your solutions carefully.
+A nice presentation is sometimes more time consuming than solving the
+problems.
+Start early; note that time you put in early usually turns out more
+productive than a last-minute effort.
+
+Individual work is expected, but if you get stuck, email Matt or Harald
+a precise description of the problem, bring up the problem at the
+lecture, or (our preferred option) use the LMS discussion board.
+The COMP30026 LMS discussion forum is both useful and appropriate
+for this;
+soliciting help from sources other than the above
+will be considered cheating and will lead to disciplinary action.
+
+\begin{flushright}
+Harald and Matt
+\\ 27 September 2019
+\end{flushright}
+
+\end{document}

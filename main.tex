@@ -1,0 +1,371 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{enumitem}
+\usepackage{bm}
+\usepackage[fleqn]{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{listings}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\newtheorem{thm}{Theorem}
+\pagestyle{fancy}
+\usepackage{commath}
+
+\usepackage{mathtools}
+
+% \newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+
+\newcommand{\false}{\ensuremath{\mathbf{f}}\xspace}
+\newcommand{\true}{\ensuremath{\mathbf{t}}\xspace}
+
+\renewcommand{\theenumi}{\alph{enumi}}
+\newcommand{\impl}{\mathbin{\Rightarrow}}
+\newcommand{\biim}{\mathbin{\Leftrightarrow}}
+\newcommand{\id}[1]{\mbox{\textit{#1}}}
+\newcommand{\tuple}[1]{\langle #1 \rangle}
+\newcommand{\ma}{\mathsf{a}}
+\newcommand{\mb}{\mathsf{b}}
+\newcommand{\mc}{\mathsf{c}}
+\newcommand{\md}{\mathsf{d}}
+\newcommand{\nat}{\mathbb{N}}
+\newcommand{\intg}{\mathbb{Z}}
+
+\newcommand{\set}[1]{\left\{
+    \begin{array}{l}#1
+    \end{array}
+  \right\}}
+
+\newcommand{\sset}[2]{\left\{~#1 \left|
+      \begin{array}{l}#2\end{array}
+    \right.     \right\}}
+
+\topmargin -.5in
+\textheight 9in
+\oddsidemargin -.25in
+\evensidemargin -.25in
+\textwidth 7in
+
+\begin{document}
+
+\author{XuLin Yang, 904904}
+\title{COMP30026 Models of Computation \\ Assignment 2}
+\maketitle
+
+\medskip
+
+% Q1 -------------------------------------------------
+\section*{Challenge 1}
+
+Give context-free grammars for these languages:
+\begin{enumerate}
+% Q1 a --------------------
+\item
+The set $A$ of odd-length strings in $\{\ma,\mb\}^*$ whose first, 
+middle and last symbols are all the same.
+For example, $\mb$ and $\ma \mb \ma \mb \ma$ are in $A$,
+but $\epsilon$, $\ma \ma \ma \ma$, and $\ma \mb \mb \mb \mb$ are not.
+
+context-free grammar $F$ is a 4-tuple $(V, \Sigma, R, S)$ where \\
+$V \text{ is } \{ T,\ X,\ Y \}$ \\
+$\Sigma \text{ is } \{ \ma,\ \mb \}$ \\
+$R$ is 
+\[
+\begin{array}{lrl}
+   T & \rightarrow & \ma\ X\ \ma \mid \mb\ Y\ \mb \mid \ma \mid \mb \\
+   X & \rightarrow & \ma\ X\ \mb \mid \mb\ X\ \ma \mid \mb\ X\ \mb \mid \ma\ X\ \ma \mid \ma \\
+   Y & \rightarrow & \ma\ Y\ \mb \mid \mb\ Y\ \ma \mid \mb\ Y\ \mb \mid \ma\ Y\ \ma \mid \mb \\
+\end{array}
+\]
+$S \text{ is } T $
+
+% Q1 b --------------------
+\item
+The set $B = \{\ma^i \mb \ma^j \mid i \not= j\}$.
+For example, $\ma \mb$ and $\ma \mb \ma \ma \ma$ are in $B$,
+but $\epsilon$, $\ma$, $\mb$, and $\ma \ma \mb \ma \ma$ are not.
+
+context-free grammar $G$ is a 4-tuple $(V, \Sigma, R, S)$ where \\
+$V \text{ is } \{ T,\ X,\ Y,\ Z \}$ \\
+$\Sigma \text{ is } \{ \ma,\ \mb \}$ \\
+$R$ is 
+\[
+\begin{array}{lrl}
+   T & \rightarrow & X \mid \mb \mid \epsilon \\
+   X & \rightarrow & \ma\ X\ \ma \mid Y \mid Z \\
+   Y & \rightarrow & \ma\ Y \mid b  \\
+   Z & \rightarrow & Z\ \ma \mid b \\
+\end{array}
+\]
+$S \text{ is } T $
+
+\end{enumerate}
+
+% Q2 -------------------------------------------------
+\section*{Challenge 2}
+Consider the language
+\[
+  C = \set{w \in \{\texttt{a},\texttt{b}\}^* \mid
+        \mbox{$w$ contains at least as many \texttt{a}s as \texttt{b}s}}
+\]
+For example, $\epsilon$, \verb!aaa!, \verb!aba!, and \verb!bbaababaa! 
+are all in $C$,
+but \verb!bbb! and \verb!bbaaabb! are not.
+\begin{enumerate}
+% Q2 a --------------------
+\item
+Construct a 3-state push-down automaton to recognise $C$.
+Provide the solution as a transition diagram.
+Partial marks are given for a $C$ recogniser with more than 3 states.
+
+\includegraphics[width=0.9\textwidth]{2a.png} \\
+
+% Q2 b --------------------
+\item
+Prove formally that the following context-free grammar $G$ generates $C$:
+\[
+\begin{array}{lrl}
+   S & \rightarrow
+     & \epsilon 
+\\   & \mid
+     & \texttt{a} 
+\\   & \mid
+     & \texttt{a}\ S\ \texttt{b} 
+\\   & \mid
+     & \texttt{b}\ S\ \texttt{a} 
+\\   & \mid
+     & S\ S
+\end{array}
+\]
+Hint: Proceed in two steps;
+prove that every string in $L(G)$ is in $C$
+(by structural induction) 
+and prove that every string in $C$ is in $L(G)$
+(by induction on the length of the string).
+
+\textbf{Given:} 
+
+context-free language $C$: 
+\[
+  C = \set{w \in \{\texttt{a},\texttt{b}\}^* \mid
+        \mbox{$w$ contains at least as many \texttt{a}s as \texttt{b}s}}
+\]
+and
+
+context-free grammar $G$:
+\[
+\begin{array}{lrl}
+   S & \rightarrow
+     & \epsilon 
+\\   & \mid
+     & \texttt{a} 
+\\   & \mid
+     & \texttt{a}\ S\ \texttt{b} 
+\\   & \mid
+     & \texttt{b}\ S\ \texttt{a} 
+\\   & \mid
+     & S\ S
+\end{array}
+\]
+
+\textbf{To be proved:} $G$ generates $C$
+
+\textbf{Proof:} 
+
+\begin{enumerate}
+    % step 1
+    \item \textbf{Step 1}: prove that every string in $L(G)$ is in $C$ (by structural induction)
+    
+    \textbf{Let}  string $x \in L(G)$, string $S' \in L(G)$, string $S'' \in L(G)$. \\
+    $A(string) = \text{number of } \texttt{a}s \text{ in the } string$ \\
+    $B(string) = \text{number of } \texttt{b}s \text{ in the } string$ 
+    
+    \textbf{Assume:} every string in $L(G)$ is in $C$.
+    
+    \begin{enumerate}
+        \item \textbf{base case:}
+    
+        \begin{enumerate}
+    
+            % base case 1
+            \item \textbf{$1^{st}$ base case:} $x = \epsilon$
+            
+            As $\epsilon \in C$ by definition, so $x \in C$. \\
+            $\therefore$ $1^{st}$ base case is in $C$.
+            
+            % base case 2
+            \item \textbf{$2^{nd}$ base case:} $x = \texttt{a}$
+            
+            As $\texttt{a} \in C$ by definition, so $x \in C$. \\
+            $\therefore$ $2^{nd}$ base case is in $C$.
+        
+        \end{enumerate}
+        
+        \item \textbf{inductive case:}
+    
+        \begin{enumerate}
+        
+            % inductive case 1
+            \item \textbf{$1^{st}$ inductive case:} $x = \texttt{a} S' \texttt{b}$ where $S' \in L(G)$
+            
+            As $S' \in C$, $S'$ has at least as many \texttt{a}s as \texttt{b}s. \\
+            So add one \texttt{a} at the start of $S'$ and one \texttt{b} at the end of $S'$ still makes $x$ has at least as many \texttt{a}s as \texttt{b}s. \\
+            In other words, as $A(x) = 1 + A(S')$, $B(x) = 1 + B(S')$ and $A(S') \geq B(S')$, so $A(x) \geq B(x)$
+            
+            $\therefore$ $1^{st}$ inductive case is in $C$.
+            
+            % inductive case 2
+            \item \textbf{$2^{nd}$ inductive case:} $x = \texttt{b} S' \texttt{a}$ where $S' \in L(G)$
+            
+            Symmetrically, as $S' \in C$, $S'$ has at least as many \texttt{a}s as \texttt{b}s. \\
+            So add one \texttt{b} at the start of $S'$ and one \texttt{a} at the end of $S'$ still makes $x$ has at least as many \texttt{a}s as \texttt{b}s. \\
+            In other words, as $A(x) = 1 + A(S')$, $B(x) = 1 + B(S')$ and $A(S') \geq B(S')$, so $A(x) \geq B(x)$
+            
+            $\therefore$ $2^{nd}$ inductive case is in $C$.
+            
+            % inductive case 3
+            \item \textbf{$3^{rd}$ inductive case:} $x = S' S''$ where $S' \in L(G)$, $S'' \in L(G)$
+            
+            As $A(x) = A(S') + A(S'')$, $B(x) = B(S') + B(S'')$, $A(S') \geq B(S')$, $A(S'') \geq B(S'')$, so $A(x) \geq B(x)$
+            
+            $\therefore$ $3^{rd}$ inductive case is in $C$.
+        
+        \end{enumerate}
+    \end{enumerate}
+    
+    \textbf{Hence}, in no case, string in $L(G)$ is not in $C$. \\
+    \textbf{Therefore}, every string in $L(G)$ is in $C$. \\
+    
+    % step 2
+    \item \textbf{Step 2}: prove that every string in $C$ is in $L(G)$ (by induction on the length of the string)
+    
+    \textbf{Let} string $w \in C$, $\abs{w}$ = length($w$). \\
+    \textbf{Assume:} if $\abs{w} = n$ where $n \geq 0$, $w \in L(G)$. 
+    
+    \begin{enumerate}
+        % base case
+        \item \textbf{base case:}
+    
+        \begin{enumerate}
+    
+            % base case 1
+            \item \textbf{$1^{st}$ base case:} $n = 0$, $w = \epsilon$. \\
+            As $\epsilon \in L(G)$ by definition, so $w \in L(G)$. \\
+            $\therefore$ $1^{st}$ base case is in $L(G)$.
+            
+            % base case 2
+            \item \textbf{$2^{nd}$ base case:} $n = 1$, $w = a$. \\
+            As $a \in L(G)$ by definition, so $w \in L(G)$. \\
+            $\therefore$ $2^{nd}$ base case is in $L(G)$.
+            
+        \end{enumerate}
+        
+    \end{enumerate}
+    
+    \begin{enumerate}
+        % inductive case
+        \item \textbf{inductive case:}
+    
+        \begin{enumerate}
+    
+            % inductive case 1
+            \item \textbf{$1^{st}$ inductive case:} $\abs{w'} = n + 1$, $w' = aw$. \\
+            As $a \in L(G)$ by definition and $w \in L(G)$ by assumption,  so $w' \in L(G)$ because $S = S'S'', S \in L(G) \text{ where } S' \in L(G) \text{ and } S'' \in L(G)$. \\
+            $\therefore$ $1^{st}$ inductive case is in $L(G)$.
+            
+            % inductive case 2
+            \item \textbf{$2^{nd}$ inductive case:} $\abs{w'} = n + 1$, $w' = wa$. \\
+            Symmetrically, as $a \in L(G)$ by definition and $w \in L(G)$ by assumption,  so $w' \in L(G)$ because $S = S'S'', S \in L(G) \text{ where } S' \in L(G) \text{ and } S'' \in L(G)$. \\
+            $\therefore$ $2^{nd}$ inductive case is in $L(G)$.
+            
+            % inductive case 3
+            \item \textbf{$3^{rd}$ inductive case:} $\abs{w'} = n + 2$, $w' = awb$. \\
+            As $w \in L(G)$ by assumption, $S' = aSb$ where $S' \in L(G) \text{ and } S \in L(G)$, so $w' \in L(G)$. \\
+            $\therefore$ $3^{rd}$ inductive case is in $L(G)$.
+            
+            % inductive case 4
+            \item \textbf{$4^{th}$ inductive case:} $\abs{w'} = n + 2$, $w' = bwa$. \\
+            Symmetrically, as $w \in L(G)$ by assumption, $S' = bSa$ where $S' \in L(G) \text{ and } S \in L(G)$, so $w' \in L(G)$. \\
+            $\therefore$ $4^{th}$ inductive case is in $L(G)$.
+        \end{enumerate}
+        
+        \textbf{Hence}, in $\abs{w'} = n + 1$ , $\abs{w'} = n + 2$ cases and base cases, the assumption if $\abs{w} = n$ where $n \geq 0$, $w \in L(G)$ is true. \\
+    \textbf{Therefore}, every string in $L(G)$ is in $C$. \\
+    \end{enumerate}
+    
+\end{enumerate}
+
+\textbf{Conclusion:} Since every string in $L(G)$ is in $C$ and every string in $C$ is in $L(G)$, we can say that context-free grammar $G$ generates $C$.
+
+\end{enumerate}
+
+% Q3 -------------------------------------------------
+\section*{Challenge 3}
+Consider the two language-transformer functions $\id{triple}$ and 
+$\id{snip}$ defined as follows:
+\[
+\begin{array}{lcl}
+   \id{triple}(L) &=& \{w w w \mid w \in L\}
+\\ \id{snip}(L) &=& \{ xz \mid x y z \in L \mbox{ and } |x| = |y| = |z|\}
+\end{array}
+\]
+Note that $\id{snip}(L)$ discards a string $w$ from $L$ unless $w$
+has length $3k$ for some $k \in \mathbb{N}$ (possibly 0), and then
+the strings whose lengths are multiples of 3 have their middle
+thirds removed.
+For example, if 
+$L= \{\ma\mb,\mb\ma\mb,\mb\mb\mb,\mb\ma\mb\mb\ma,\ma\ma\mb\mb\ma\ma\}$
+then $\id{snip}(L) = \{\mb\mb,\ma\ma\ma\ma\}$.
+\begin{enumerate}
+% Q3 a --------------------
+\item
+Let $R$ be a regular language.
+Is $R^3 = R \circ R \circ R$ necessarily regular? 
+Justify your answer.
+
+According to the theorem: The class of regular languages is closed under $\circ$. \\
+As $R$ is regular, so does $R \circ R$, and so does $R \circ R \circ R$. \\
+$\therefore R^3 = R \circ R \circ R$ is regular.
+
+% Q3 b --------------------
+\item
+Let $R$ be a regular language.
+Is $\id{triple}(R)$ necessarily regular?  
+Justify your answer.
+
+\includegraphics[width=0.3\textwidth]{3b_1.png} \\
+
+Let us have this dfa (deterministic finite state automaton) that recognize the regular language $R$ without considering the detail of this dfa.
+
+\includegraphics[width=1\textwidth]{3b_2.png} \\
+
+As we have the dfa defined above, design the nfa that recognize $triple(R)$ by concatenate three dfas such that first two dfas' accept states become normal states and have epsilon transitions to next dfa's start state, and the third dfa's accept states becomes as the accept states for the whole nfa. \\
+By the Theorem: Every NFA has an equivalent DFA. \\
+We can some how find the equivalent dfa for this nfa. \\
+So we have a dfa that can recognize $tripple(R)$. \\
+By the Theorem: A language is regular iff there is a finite automaton that recognises it. \\
+$\therefore tripple(R)$ is regular. 
+
+% Q3 c --------------------
+\item
+Let $R$ be a regular language.
+Show that $\id{snip}(R)$ is not necessarily regular.
+
+\textbf{Assume:} $\id{snip}(R)$ is regular. \\
+\textbf{Let:} $p$ be the pumping length. 
+
+% Consider string $wxyz \in R \text{ where } \abs{wx} = \abs{y} = \abs{z} = p,\ \abs{wxyz} = 3p$ and $\abs{x} \neq \epsilon$. \\
+% By the bumping lemma, $wxz \in snip(R) \text{ where } wx^{i}x \in snip(R)\ \forall i \geq 0$. \\
+% But $\abs{wxxz} \neq 2p$
+
+Consider string $xyz \in R \text{ where } \abs{x} = \abs{y} = \abs{z} = p,\ \abs{xyz} = 3p$. \\
+By the bumping lemma, $xz \in snip(R) \text{ where } \abs{xz} = 2p \text{ (imples the length is a multiple of 2 which is even) } \text{ and } xz = uvw \text{ where } uv^{i}w \in snip(R)\ \forall i \geq 0,\ v \neq \epsilon \text{ and } \abs{uv} \leq p$. \\
+But when $\abs{v} = q$ where $q$ is odd, then $\abs{uvvw}$ is odd as $\abs{uvw} = \abs{xz}$ and $\abs{uvvw} = \abs{xz} + q = 2p + q$ is also odd and then $uvvw \notin snip(R)$ when $\abs{v}$ is odd, a contradiction. 
+
+\textbf{In conclusion:} $\id{snip}(R)$ is not necessarily regular.
+\end{enumerate}
+
+\end{document}
+\grid
+\grid

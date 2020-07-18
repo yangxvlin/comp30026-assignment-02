@@ -1,0 +1,106 @@
+
+<!-- saved from url=(0097)http://www.cs.um.edu.mt/gordon.pace/Research/Software/Relic/Transformations/FSA/intersection.html -->
+<html class="gr__cs_um_edu_mt"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title> 
+Intersection of Finite State Automata
+</title></head>
+        <body bgcolor="#555555" link="#FFFF00" text="#FFFFFFF" data-gr-c-s-loaded="true">
+
+<h1> Intersection of Finite State Automata </h1>
+ 
+<h2> <a name="algorithm"></a>Algorithm </h2>
+<p> Intersection can be defined in terms of complementation and
+union. Since we have algorithms to obtain the union and 
+complement of a finite state automaton, we can give a construction
+to calculate their intersection.</p>
+
+<p> Recall that the intersection of two sets <i>S</i> and 
+<i>T</i> is equal to: (<i>S<sup>c</sup></i> U <i>T<sup>c</sup></i>)<i><sup>c</sup></i>,
+where <i>S<sup>c</sup></i> is the complement of <i>S</i>.
+</p>
+
+<p> The algorithm to calculate a finite state automaton which 
+accepts the intersection of the languages accepted by two
+automatons <i>A<sub>1</sub></i> and <i>A<sub>2</sub></i>
+is thus the following: </p>
+
+
+<ol>
+<li> Construct finite state automata <i>B<sub>1</sub></i> and 
+	<i>B<sub>2</sub></i> which accept the complement of the
+	languages accepted by <i>A<sub>1</sub></i> and 
+	<i>A<sub>2</sub></i> (see the <a href="http://www.cs.um.edu.mt/gordon.pace/Research/Software/Relic/Transformations/FSA/complement.html">relevant</a> 
+	algorithm).
+</li><li> Construct finite state automaton <i>C</i> which accepts the union
+	of the languages accepted by <i>B<sub>1</sub></i> and 
+	<i>B<sub>2</sub></i> (see the <a href="http://www.cs.um.edu.mt/gordon.pace/Research/Software/Relic/Transformations/FSA/union.html">relevant</a> 
+	algorithm).
+</li><li> Remove useless and unreachable states from <i>C</i>, obtaining <i>D</i> 
+	(see the 
+	relevant algorithms to remove <a href="http://www.cs.um.edu.mt/gordon.pace/Research/Software/Relic/Transformations/FSA/remove-useless.html">useless</a> 
+	and <a href="http://www.cs.um.edu.mt/gordon.pace/Research/Software/Relic/Transformations/FSA/remove-unreachable.html">unreachable</a> states).
+</li><li> Minimise <i>D</i> to obtain <i>E</i> (see the <a href="http://www.cs.um.edu.mt/gordon.pace/Research/Software/Relic/Transformations/FSA/minimise.html">relevant</a> 
+	algorithm).
+</li><li> Calculate the inverse of <i>E</i>.
+</li></ol>
+
+<p> Note that steps 3 and 4 are not necessary, but are done to simplify 
+	step 5 (recall that to calculate the complement of a finite
+	state automaton, the original automaton has to be made deterministic,
+	which can be a very messy and error-prone process with large automata).</p>
+
+
+
+
+<h2> <a name="examples"></a>Example </h2>
+<p> Consider the following two FSA: </p>
+ 
+<center><p>
+<img src="./Intersection of Finite State Automata_files/fsa-al-int-1.gif">
+</p></center>
+ 
+<ol>
+<li> Start by constructing automata which recognise the complement of these
+	automata:
+
+
+	<center><p>
+	<img src="./Intersection of Finite State Automata_files/fsa-al-int-2.gif">
+	</p></center>
+
+</li><li> Take the union of these resultant automata:
+
+	<center><p>
+	<img src="./Intersection of Finite State Automata_files/fsa-al-int-3.gif">
+	</p></center>
+
+</li><li> Remove useless and unreachable states:
+
+	<center><p>
+	<img src="./Intersection of Finite State Automata_files/fsa-al-int-4.gif">
+	</p></center>
+
+</li><li> Minimise automaton:
+
+	<center><p>
+	<img src="./Intersection of Finite State Automata_files/fsa-al-int-5.gif">
+	</p></center>
+
+</li><li> Construct an automaton accepting the complement of the language recognised by the 
+	minimised automaton:
+
+	<center><p>
+	<img src="./Intersection of Finite State Automata_files/fsa-al-int-6.gif">
+	</p></center>
+</li></ol>
+
+<h2><a name="exercises"></a>Exercises</h2>
+
+<p> Calculate an automaton which recognises the intersection of the languages recognised
+	by the following two automata: </p>
+
+<center><table><tbody><tr>
+<td><img src="./Intersection of Finite State Automata_files/fsa-ex-4.gif"></td><td><img src="./Intersection of Finite State Automata_files/fsa-ex-5.gif"></td>
+</tr></tbody></table></center>
+
+
+</body></html>
